@@ -1,0 +1,76 @@
+<!--
+- Author: Christian Amenós Jaén
+- Description: Blackboard is a tool that aims to be used as a light and simple web aplication that allows the user to draw and paint over a canvas.
+In fact an HTML5 canvas : ), so this tool is mostly available for all the major browser at 2013.
+- License: This is an open source code. Feel free to use, adapt or do whatever you want with it. If you haven't downloaded it form github, you may
+want to check for any updates at: https://github.com/chajaen/blackboard.
+- Feel free to contact me if you want to know more about me. You can find some information about who i am and many ways to contact me on my
+personal webpage: http://christianamenos.es.
+
+UPDATES:
+------------------------------------------------
+- Date: 03/03/2013
+- Author: Christian Amenós Jaén
+- Description: The project has been started and it takes a 800x600 pixel canvas in which the user can draw in a black brush with both right and left
+mouse buttons.
+-----------------------------------------------
+
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script>
+      var pressed = false;
+      var prevX = -1;
+      var prevY = -1;
+      var nowX = -1;
+      var nowY = -1;
+      var canvas = null;
+      var context = null;
+      function initialize(){
+        canvas = $('#blackboard');
+        context = canvas[0].getContext('2d');
+        
+		$('#blackboard').bind("contextmenu",function(e){
+			return false;
+		});
+		
+        //Presionem el botó a dins del canvas
+        $('#blackboard').bind('mousedown', function(e){
+          pressed = true;
+          prevX = e.pageX - $('#blackboard').offset().left;
+          prevY = e.pageY - $('#blackboard').offset().top;
+          nowX = e.pageX - $('#blackboard').offset().left;
+          nowY = e.pageY - $('#blackboard').offset().top;
+        });
+        
+        //Deixem d'apretar el botó del mouse, es igual on
+        $(document).bind('mouseup', function(e){
+          pressed = false;
+        });
+        
+        //Movem el mouse sobre el canvas
+        $('#blackboard').bind('mousemove', function(e){
+          if(pressed){
+            prevX = nowX;
+            prevY = nowY;
+            nowX = e.pageX - $('#blackboard').offset().left;
+            nowY = e.pageY - $('#blackboard').offset().top;
+            context.beginPath();
+            context.moveTo(prevX, prevY);
+            context.lineTo(nowX, nowY);
+            context.lineWidth = 20;
+            context.lineCap = 'round';
+            context.stroke();
+          }
+        });
+      }
+    </script>
+  </head>
+  <body onload="initialize()">
+    <canvas id="blackboard" width="800" height="600"></canvas>
+  </body>
+</html>
